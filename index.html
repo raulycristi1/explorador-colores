@@ -29,6 +29,26 @@
     
     <aside class="w-full md:w-1/3 max-w-md overflow-y-scroll bg-white shadow-xl p-6 border-r border-gray-200">
       <h1 class="text-3xl font-extrabold mb-6 border-b pb-3 text-indigo-700">Explorador de Paletas</h1>
+      
+      <!-- Buscador añadido -->
+      <div class="mb-6">
+        <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2">Buscar colores</label>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Escribe un nombre (ej: black, blue, red)" 
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
+          >
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Busca por nombre de color (ej: black, blue, red)</p>
+      </div>
+      
       <ul id="colorList" class="space-y-2">
         <li class="text-center text-gray-500 py-4">Cargando colores...</li>
       </ul>
@@ -44,7 +64,21 @@
   <script>
     const colorList = document.getElementById("colorList");
     const colorDetail = document.getElementById("colorDetail");
+    const searchInput = document.getElementById("searchInput");
     let allColors = [];
+
+    // Función para filtrar colores por nombre
+    function filterColors(searchTerm) {
+      if (!searchTerm) {
+        return allColors;
+      }
+      
+      const term = searchTerm.toLowerCase();
+      return allColors.filter(color => 
+        color.name.toLowerCase().includes(term) || 
+        color.brand.toLowerCase().includes(term)
+      );
+    }
 
     // Función para renderizar el listado de colores
     function renderColorList(colorsArray) {
@@ -120,6 +154,27 @@
                         });
                         listItem.classList.add('bg-indigo-100');
                     }
+                }
+            });
+            
+            // Configurar el buscador
+            searchInput.addEventListener('input', (event) => {
+                const searchTerm = event.target.value;
+                const filteredColors = filterColors(searchTerm);
+                renderColorList(filteredColors);
+                
+                // Si hay resultados, seleccionar el primero
+                if (filteredColors.length > 0) {
+                    updateColorDetail(filteredColors[0]);
+                    const firstItem = document.querySelector('#colorList li');
+                    if (firstItem) {
+                        document.querySelectorAll('#colorList li').forEach(el => {
+                            el.classList.remove('bg-indigo-100');
+                        });
+                        firstItem.classList.add('bg-indigo-100');
+                    }
+                } else {
+                    colorDetail.innerHTML = '<p class="text-2xl text-gray-500 font-light">No se encontraron colores que coincidan con tu búsqueda.</p>';
                 }
             });
             
