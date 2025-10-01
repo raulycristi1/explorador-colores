@@ -7,7 +7,7 @@
 /* Media Query para pantallas medianas/pequeñas */
 @media (max-width: 768px) {
     .big-color-box {
-        width: 18rem; /* 288px */
+        width: 24rem; /* 288px */
         height: 18rem;
     }
 }
