@@ -6,60 +6,7 @@
   <title>Paleta de Colores | Explorador</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <style>
-    /* CSS Mínimo: Define el tamaño de la caja de detalle usando una clase fácil de entender */
-    .big-color-box {
-        width: 32rem; /* 512px */
-        height: 32rem;
-    }
-    
-    /* Media Query para pantallas medianas/pequeñas */
-    @media (max-width: 768px) {
-        .big-color-box {
-            width: 18rem; /* 288px */
-            height: 18rem;
-        }
-    }
-
-    /* Estilos para el toggle del modo oscuro */
-    .theme-toggle {
-      position: relative;
-      width: 60px;
-      height: 30px;
-      background-color: #cbd5e0;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .theme-toggle.dark {
-      background-color: #4f46e5;
-    }
-
-    .theme-toggle-slider {
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 24px;
-      height: 24px;
-      background-color: white;
-      border-radius: 50%;
-      transition: transform 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .theme-toggle.dark .theme-toggle-slider {
-      transform: translateX(30px);
-    }
-
-    /* Transiciones suaves para el cambio de tema */
-    body, aside, section, input, li {
-      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased">
   
