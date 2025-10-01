@@ -1,197 +1,279 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paleta de Colores | Explorador</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <style>
-    /* CSS Mínimo: Define el tamaño de la caja de detalle usando una clase fácil de entender */
-    .big-color-box {
-        width: 32rem; /* 512px */
-        height: 32rem;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paleta de Colores | Explorador</title>
+  
+    <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    /* CSS Mínimo: Define el tamaño de la caja de detalle usando una clase fácil de entender */
+    .big-color-box {
+        width: 32rem; /* 512px */
+        height: 32rem;
+    }
+    
+    /* Media Query para pantallas medianas/pequeñas */
+    @media (max-width: 768px) {
+        .big-color-box {
+            width: 18rem; /* 288px */
+            height: 18rem;
+        }
+    }
+
+    /* NUEVO: Transición suave de colores para el cambio de modo */
+    html.dark {
+        /* Opcional: Define una variable para un fondo aún más oscuro que gray-900 si lo deseas */
+        --color-bg-darkest: #0a0a0a;
     }
-    
-    /* Media Query para pantallas medianas/pequeñas */
-    @media (max-width: 768px) {
-        .big-color-box {
-            width: 18rem; /* 288px */
-            height: 18rem;
-        }
+    body, aside, section, input {
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
     }
-  </style>
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-900 antialiased">
-  
-  <main class="flex h-screen">
-    
-    <aside class="w-full md:w-1/3 max-w-md overflow-y-scroll bg-white shadow-xl p-6 border-r border-gray-200">
-      <h1 class="text-3xl font-extrabold mb-6 border-b pb-3 text-indigo-700">Explorador de Paletas</h1>
-      
-      <!-- Buscador añadido -->
-      <div class="mb-6">
-        <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2">Buscar colores</label>
-        <div class="relative">
-          <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="Escribe un nombre (ej: black, blue, red)" 
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
-          >
-          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-        </div>
-        <p class="text-xs text-gray-500 mt-2">Busca por nombre de color (ej: black, blue, red)</p>
-      </div>
-      
-      <ul id="colorList" class="space-y-2">
-        <li class="text-center text-gray-500 py-4">Cargando colores...</li>
-      </ul>
-    </aside>
-    
-    <section class="hidden md:flex md:w-2/3 items-center justify-center p-8 bg-gray-100">
-      <div id="colorDetail" class="text-center transition duration-300">
-        <p class="text-2xl text-gray-500 font-light">Selecciona un color de la lista para ver sus detalles.</p>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const colorList = document.getElementById("colorList");
-    const colorDetail = document.getElementById("colorDetail");
-    const searchInput = document.getElementById("searchInput");
-    let allColors = [];
-
-    // Función para filtrar colores por nombre
-    function filterColors(searchTerm) {
-      if (!searchTerm) {
-        return allColors;
-      }
-      
-      const term = searchTerm.toLowerCase();
-      return allColors.filter(color => 
-        color.name.toLowerCase().includes(term) || 
-        color.brand.toLowerCase().includes(term)
-      );
-    }
-
-    // Función para renderizar el listado de colores
-    function renderColorList(colorsArray) {
-      if (colorsArray.length === 0) {
-        colorList.innerHTML = '<li class="text-center text-red-500 py-4">No se encontraron colores.</li>';
-        return;
-      }
-      
-      colorList.innerHTML = colorsArray.map(color => `
-        <li class="p-3 flex items-center space-x-4 cursor-pointer hover:bg-indigo-50 rounded-lg transition duration-150" 
-            data-hex="${color.hex}">
-          <div class="w-12 h-12 rounded-lg shadow-md flex-shrink-0" style="background-color: ${color.hex};"></div>
-          <div>
-            <span class="block font-medium text-gray-700">${color.name}</span>
-            <span class="block text-sm text-gray-500">${color.brand} - ${color.hex}</span>
-          </div>
-        </li>
-      `).join('');
-    }
-
-    // Función para actualizar la vista de detalle
-    function updateColorDetail(color) {
-      colorDetail.innerHTML = `
-        <div class="big-color-box mx-auto rounded-3xl shadow-2xl mb-8 transform hover:scale-[1.01] transition duration-300 ease-in-out" 
-             style="background-color: ${color.hex};">
-        </div>
-        <h2 class="text-5xl font-extrabold mt-4 text-gray-800">${color.name}</h2>
-        <p class="text-2xl text-indigo-600 font-semibold mb-6">${color.brand}</p>
+<body class="bg-gray-50 text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100">
+  
+  <main class="flex h-screen">
+    
+        <aside class="w-full md:w-1/3 max-w-md overflow-y-scroll bg-white shadow-xl p-6 border-r border-gray-200 
+                  dark:bg-gray-800 dark:border-gray-700 dark:shadow-2xl">
         
-        <div class="grid grid-cols-3 gap-4 max-w-5xl mx-auto">
-            <div class="p-4 bg-white rounded-lg shadow-inner">
-                <p class="text-xs font-semibold uppercase text-gray-500">HEX</p>
-                <p class="text-lg font-mono">${color.hex}</p>
-            </div>
-            <div class="p-4 bg-white rounded-lg shadow-inner">
-                <p class="text-xs font-semibold uppercase text-gray-500">RGB (255)</p>
-                <p class="text-lg font-mono">${color.rgb_255}</p>
-            </div>
-            <div class="p-4 bg-white rounded-lg shadow-inner">
-                <p class="text-xs font-semibold uppercase text-gray-500">GIANTS EDITOR</p>
-                <p class="text-lg font-mono">${color.rgb_norm}</p>
-            </div>
-        </div>
-      `;
-    }
+        <button id="theme-toggle" class="absolute top-6 right-6 p-2 rounded-full text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 transition duration-200" aria-label="Cambiar modo claro/oscuro">
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+              <h1 class="text-3xl font-extrabold mb-6 border-b pb-3 text-indigo-700 dark:text-indigo-400 dark:border-gray-700">Explorador de Paletas</h1>
+      
+            <div class="mb-6">
+                <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Buscar colores</label>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Escribe un nombre (ej: black, blue, red)" 
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200
+                   dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
+          >
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+                <p class="text-xs text-gray-500 mt-2 dark:text-gray-400">Busca por nombre de color (ej: black, blue, red)</p>
+      </div>
+      
+              <ul id="colorList" class="space-y-2">
+        <li class="text-center text-gray-500 py-4 dark:text-gray-400">Cargando colores...</li>
+      </ul>
+    </aside>
+    
+        <section class="hidden md:flex md:w-2/3 items-center justify-center p-8 bg-gray-100 dark:bg-gray-950">
+      <div id="colorDetail" class="text-center transition duration-300">
+                <p class="text-2xl text-gray-500 font-light dark:text-gray-400">Selecciona un color de la lista para ver sus detalles.</p>
+      </div>
+    </section>
+  </main>
 
-    // Lógica principal: Cargar datos y configurar eventos
-    async function init() {
-        try {
-            // MEJORA: Carga asíncrona del JSON externo
-            const response = await fetch('colors.json');
-            if (!response.ok) {
-                throw new Error(`Error al cargar colors.json: ${response.statusText}`);
-            }
-            allColors = await response.json();
-            
-            renderColorList(allColors);
+  <script>
+    const colorList = document.getElementById("colorList");
+    const colorDetail = document.getElementById("colorDetail");
+    const searchInput = document.getElementById("searchInput");
+    let allColors = [];
 
-            // MEJORA: Delegación de eventos en el contenedor padre (colorList)
-            colorList.addEventListener('click', (event) => {
-                const listItem = event.target.closest('li');
-                
-                if (listItem && listItem.dataset.hex) {
-                    const hex = listItem.dataset.hex;
-                    const selectedColor = allColors.find(c => c.hex === hex);
-                    
-                    if (selectedColor) {
-                        updateColorDetail(selectedColor);
-                        
-                        // Resaltar el elemento seleccionado con bg-indigo-100
-                        document.querySelectorAll('#colorList li').forEach(el => {
-                            el.classList.remove('bg-indigo-100');
-                        });
-                        listItem.classList.add('bg-indigo-100');
-                    }
-                }
-            });
-            
-            // Configurar el buscador
-            searchInput.addEventListener('input', (event) => {
-                const searchTerm = event.target.value;
-                const filteredColors = filterColors(searchTerm);
-                renderColorList(filteredColors);
-                
-                // Si hay resultados, seleccionar el primero
-                if (filteredColors.length > 0) {
-                    updateColorDetail(filteredColors[0]);
-                    const firstItem = document.querySelector('#colorList li');
-                    if (firstItem) {
-                        document.querySelectorAll('#colorList li').forEach(el => {
-                            el.classList.remove('bg-indigo-100');
-                        });
-                        firstItem.classList.add('bg-indigo-100');
-                    }
-                } else {
-                    colorDetail.innerHTML = '<p class="text-2xl text-gray-500 font-light">No se encontraron colores que coincidan con tu búsqueda.</p>';
-                }
-            });
-            
-            // Mostrar el primer color por defecto
-            if (allColors.length > 0) {
-                updateColorDetail(allColors[0]);
-                document.querySelector('#colorList li').classList.add('bg-indigo-100');
-            }
+    // ** NUEVO: Variables y lógica del Modo Oscuro/Claro **
+    const toggleButton = document.getElementById('theme-toggle');
+    const rootElement = document.documentElement; // Es el elemento <html>
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
 
-        } catch (error) {
-            console.error('Fallo en la inicialización:', error);
-            colorList.innerHTML = `<li class="text-center text-red-600 font-bold py-4">Error al cargar: ${error.message}</li>`;
-            colorDetail.innerHTML = '<p class="text-red-500">No se pudieron cargar los datos.</p>';
+    // Función para establecer el tema y actualizar los íconos
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            rootElement.classList.add('dark'); // Activa las clases dark: de Tailwind
+            localStorage.setItem('theme', 'dark');
+            // Muestra el sol (para indicar que se puede cambiar a claro)
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        } else {
+            rootElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            // Muestra la luna (para indicar que se puede cambiar a oscuro)
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
         }
     }
 
-    init();
-  </script>
+    // Cargar la preferencia guardada o usar la del sistema al inicio
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Si el sistema prefiere oscuro y no hay guardado
+            setTheme('dark');
+        } else {
+            // Por defecto, modo claro
+            setTheme('light');
+        }
+    }
+
+    // Escuchar el clic del botón
+    toggleButton.addEventListener('click', () => {
+        const isDark = rootElement.classList.contains('dark');
+        setTheme(isDark ? 'light' : 'dark');
+    });
+    // ** FIN NUEVO: Variables y lógica del Modo Oscuro/Claro **
+
+    // Función para filtrar colores por nombre
+    function filterColors(searchTerm) {
+      if (!searchTerm) {
+        return allColors;
+      }
+      
+      const term = searchTerm.toLowerCase();
+      return allColors.filter(color => 
+        color.name.toLowerCase().includes(term) || 
+        color.brand.toLowerCase().includes(term)
+      );
+    }
+
+    // Función para renderizar el listado de colores
+    function renderColorList(colorsArray) {
+      if (colorsArray.length === 0) {
+        // MODIFICADO: Añadidas clases de modo oscuro al texto de error
+        colorList.innerHTML = '<li class="text-center text-red-500 py-4 dark:text-red-400">No se encontraron colores.</li>';
+        return;
+      }
+      
+      colorList.innerHTML = colorsArray.map(color => `
+                <li class="p-3 flex items-center space-x-4 cursor-pointer hover:bg-indigo-50 rounded-lg transition duration-150
+                  dark:hover:bg-indigo-900 dark:text-gray-100" 
+            data-hex="${color.hex}">
+          <div class="w-12 h-12 rounded-lg shadow-md flex-shrink-0" style="background-color: ${color.hex};"></div>
+          <div>
+                            <span class="block font-medium text-gray-700 dark:text-gray-200">${color.name}</span>
+            <span class="block text-sm text-gray-500 dark:text-gray-400">${color.brand} - ${color.hex}</span>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    // Función para actualizar la vista de detalle
+    function updateColorDetail(color) {
+      colorDetail.innerHTML = `
+        <div class="big-color-box mx-auto rounded-3xl shadow-2xl mb-8 transform hover:scale-[1.01] transition duration-300 ease-in-out" 
+             style="background-color: ${color.hex};">
+        </div>
+                <h2 class="text-5xl font-extrabold mt-4 text-gray-800 dark:text-gray-200">${color.name}</h2>
+        <p class="text-2xl text-indigo-600 font-semibold mb-6 dark:text-indigo-400">${color.brand}</p>
+        
+        <div class="grid grid-cols-3 gap-4 max-w-5xl mx-auto">
+                        <div class="p-4 bg-white rounded-lg shadow-inner dark:bg-gray-700 dark:shadow-none dark:border dark:border-gray-600">
+                <p class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">HEX</p>
+                <p class="text-lg font-mono dark:text-gray-100">${color.hex}</p>
+            </div>
+                        <div class="p-4 bg-white rounded-lg shadow-inner dark:bg-gray-700 dark:shadow-none dark:border dark:border-gray-600">
+                <p class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">RGB (255)</p>
+                <p class="text-lg font-mono dark:text-gray-100">${color.rgb_255}</p>
+            </div>
+                        <div class="p-4 bg-white rounded-lg shadow-inner dark:bg-gray-700 dark:shadow-none dark:border dark:border-gray-600">
+                <p class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">GIANTS EDITOR</p>
+                <p class="text-lg font-mono dark:text-gray-100">${color.rgb_norm}</p>
+            </div>
+        </div>
+      `;
+    }
+
+    // Lógica principal: Cargar datos y configurar eventos
+    async function init() {
+        // ** NUEVO: Llama a loadTheme para aplicar el tema ANTES de que se cargue la lista **
+        loadTheme(); 
+        // ** FIN NUEVO **
+
+        try {
+            // MEJORA: Carga asíncrona del JSON externo
+            const response = await fetch('colors.json');
+            if (!response.ok) {
+                throw new Error(`Error al cargar colors.json: ${response.statusText}`);
+            }
+            allColors = await response.json();
+            
+            renderColorList(allColors);
+
+            // MEJORA: Delegación de eventos en el contenedor padre (colorList)
+            colorList.addEventListener('click', (event) => {
+                const listItem = event.target.closest('li');
+                
+                if (listItem && listItem.dataset.hex) {
+                    const hex = listItem.dataset.hex;
+                    const selectedColor = allColors.find(c => c.hex === hex);
+                    
+                    if (selectedColor) {
+                        updateColorDetail(selectedColor);
+                        
+                        // Resaltar el elemento seleccionado con bg-indigo-100
+                        document.querySelectorAll('#colorList li').forEach(el => {
+                            // MODIFICADO: Eliminar también la clase oscura de resaltado
+                            el.classList.remove('bg-indigo-100', 'dark:bg-indigo-900');
+                        });
+                        // MODIFICADO: Añadir clase de resaltado en modo claro y oscuro
+                        listItem.classList.add('bg-indigo-100', 'dark:bg-indigo-900');
+                    }
+                }
+            });
+            
+            // Configurar el buscador
+            searchInput.addEventListener('input', (event) => {
+                const searchTerm = event.target.value;
+                const filteredColors = filterColors(searchTerm);
+                renderColorList(filteredColors);
+                
+                // Si hay resultados, seleccionar el primero
+                if (filteredColors.length > 0) {
+                    updateColorDetail(filteredColors[0]);
+                    const firstItem = document.querySelector('#colorList li');
+                    if (firstItem) {
+                        document.querySelectorAll('#colorList li').forEach(el => {
+                            // MODIFICADO: Eliminar también la clase oscura de resaltado
+                            el.classList.remove('bg-indigo-100', 'dark:bg-indigo-900');
+                        });
+                        // MODIFICADO: Añadir clase de resaltado en modo claro y oscuro
+                        firstItem.classList.add('bg-indigo-100', 'dark:bg-indigo-900');
+                    }
+                } else {
+                    // MODIFICADO: Añadidas clases de modo oscuro al texto de no resultados
+                    colorDetail.innerHTML = '<p class="text-2xl text-gray-500 font-light dark:text-gray-400">No se encontraron colores que coincidan con tu búsqueda.</p>';
+                }
+            });
+            
+            // Mostrar el primer color por defecto
+            if (allColors.length > 0) {
+                updateColorDetail(allColors[0]);
+                // MODIFICADO: Añadir clase de resaltado en modo claro y oscuro
+                document.querySelector('#colorList li').classList.add('bg-indigo-100', 'dark:bg-indigo-900');
+            }
+
+        } catch (error) {
+            console.error('Fallo en la inicialización:', error);
+            // MODIFICADO: Añadidas clases de modo oscuro a los mensajes de error
+            colorList.innerHTML = `<li class="text-center text-red-600 font-bold py-4 dark:text-red-400">Error al cargar: ${error.message}</li>`;
+            colorDetail.innerHTML = '<p class="text-red-500 dark:text-red-400">No se pudieron cargar los datos.</p>';
+        }
+    }
+
+    init();
+  </script>
 </body>
 </html>
